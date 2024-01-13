@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #score {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #nameContainer {
+            margin-bottom: 10px;
+        }
+
+        #nameDisplay {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #btnAdd1, #btnAdd2, #btnReset {
+            font-size: 16px;
+            margin: 5px;
+            padding: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Score Counter</h1>
+
+    <div id="nameContainer">
+        <label for="nameInput">Enter your name:</label>
+        <input type="text" id="nameInput">
+        <button type="submit" onclick="submitName()">Submit</button>
+    </div>
+
+    <div id="nameDisplay" style="display: none;"></div>
+
+    <div id="score">Score: 0</div>
+
+    <button id="btnAdd1" onclick="addPoints(1)">Add 1 Point</button>
+    <button id="btnAdd2" onclick="addPoints(2)">Add 2 Points</button>
+    <br><br>
+    <button id="btnReset" onclick="resetPage()">Reset Page</button>
+
+    <script>
+        // Initialize score and userName from local storage
+        let score = parseInt(localStorage.getItem('score')) || 0;
+        let userName = localStorage.getItem('userName') || '';
+
+        const greetings = [
+            "Hey",
+            "Hi",
+            "What's up",
+            "You got this",
+            "Welcome",
+            "Get fucked",
+            "You're doing BADLY",
+            // Add more greetings as needed
+        ];
+
+        // Update the UI with stored data
+        updateScore();
+        updateNameDisplay();
+
+        // Check if userName is already stored, and hide the name input form
+        if (userName !== '') {
+            document.getElementById('nameContainer').style.display = 'none';
+        }
+
+        function submitName() {
+            const nameInput = document.getElementById('nameInput');
+            const nameContainer = document.getElementById('nameContainer');
+            const nameDisplay = document.getElementById('nameDisplay');
+
+            userName = nameInput.value.trim();
+
+            if (userName !== '') {
+                // Store userName in local storage
+                localStorage.setItem('userName', userName);
+
+                nameContainer.style.display = 'none';
+                nameDisplay.style.display = 'block';
+                const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+                nameDisplay.textContent = `${randomGreeting}, ${userName}!`;
+            }
+        }
+
+        function addPoints(points) {
+            score += points;
+            // Store score in local storage
+            localStorage.setItem('score', score);
+            updateScore();
+        }
+
+        function updateScore() {
+            const scoreElement = document.getElementById('score');
+            scoreElement.textContent = `Score: ${score}`;
+        }
+
+        function updateNameDisplay() {
+            const nameDisplay = document.getElementById('nameDisplay');
+            if (userName !== '') {
+                nameDisplay.style.display = 'block';
+                const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+                nameDisplay.textContent = `${randomGreeting}, ${userName}!`;
+            }
+        }
+
+        function resetPage() {
+            // Clear stored values in local storage
+            localStorage.removeItem('userName');
+            localStorage.removeItem('score');
+            
+            // Reset variables and update UI
+            userName = '';
+            score = 0;
+            updateNameDisplay();
+            updateScore();
+
+            // Show name input form
+            document.getElementById('nameContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
